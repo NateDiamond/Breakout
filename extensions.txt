@@ -1,0 +1,70 @@
+#extensions.txt
+#Meredith Anderer (mra85) and Nathaniel Diamond (ncd27)
+#12/4/16
+
+1. Game restart: We wanted to make it so that once the game was over (either
+all the bricks were eliminated or all lives were lost) the player could start
+a new game by pressing 'n'. We did this by making it so that when the game
+reaches STATE_COMPLETE and the ending message appears, if the player presses
+'n' (which we are able to tell by using the is_key_down(key) method from
+GInput), the method _switchToNewgame is called. When this happens, we go back
+to STATE_NEWGAME and everything is reset (except for the sound preference).
+
+2. Text with countdown: We made it so that the countdown to when the ball is
+released is visible on the screen. We did this by creating a GLabel in
+breakout in the helper method _switchToCountdown, making the text attribute
+equal str(int(4-self._countdownTimer)) so that the number that is visible on
+the screen will correspond with the number of seconds remaining until the ball
+is released.
+
+3. Improved user control over bounces: We made it so that the ball does
+different things depending on which part of the paddle it hits. If it hits
+the left (or right) 1/4 of the paddle, it goes back the way it came (both _vx
+and _vy are negated instead of just _vy). We did this by checking if the x
+position of the ball is either less than or equal to the position of the
+left edge of the paddle + PADDLE_WIDTH/4 and the ball is moving right, or,
+in the other case, checking if the x position of the ball is greater than or
+equal to the position of the right edge of the paddle - PADDLE_WIDTH/4 and
+the ball is not moving right. If either of these are true, we negate the
+attribute _vx, using the method horBounce.
+
+4. Sound effects: We added sounds effects for when the ball hits the paddle,
+when the ball hits the bricks, and when the ball is served. All sounds were
+taken from the given sound file for the assignment except for the sound of the
+ball colliding with the paddle, which was taken from opengameart.org. It was
+free to use; credit to Damaged Panda. We made it so that when the ball collides
+with a brick, one of two sounds plays, with a 50/50 (random) chance of either
+playing. We also made it so that this extension can be turned off (or on) by the
+user depending on their preference (with the default set to sound on) by
+pressing the sound icon in the bottom left corner. This was done by using the
+attribute input in the breakout class and seeing if the touch of that input was
+contained in the sound icon, which is a GImage created during STATE_NEWGAME in
+helper method _newGame. Both the "Sound Icon" and the "No Icon" were in the
+public domain and were taken from pixabay.com. The sounds are implemented in
+the play class, in the methods _collisionHelper and serveBall. If there is a
+collision, and the sound is on (method getSoundOn returns True), the
+corresponding sound (_paddleSound, _breakSound1, or _breakSound2) is played.
+When the ball is served, if the sound is on (method getSoundOn returns True)
+then the sound _serveBallSound is played.
+
+5. Life counter: We added a life counter to the bottom right corner of the
+screen to help the player keep track of how many lives they have remaining
+throughout the course of the game. We did this by creating a GLabel during
+STATE_NEWGAME in helper method _newGame that we assigned to the attribute
+_lifeCounter. Each time a life is lost, we change the text attribute of this
+GLabel to the corresponding number of lives left in the method _switchToPaused.
+
+6. Kicker: We added a kicker, making the ball speed up. In play, we made an
+attribute _kickCounter that keeps track of how many times the ball has hit
+the paddle since the start of the game or the previous increase in speed, and
+a method _updateKicker to update _kickCounter every time the ball hits
+the paddle. We added constants KICK_INTERVAL, which is the number of times the
+ball can hit the paddle before the speed is increased, and KICK_FACTOR, which
+is the factor by which to increase the speed. Method _updateKicker also checks
+if _kickCounter is greater or equal to KICK_INTERVAL, and if it is, it
+increases the speed of the ball by KICK_FACTOR, and sets _kickCounter back to
+0 so that we will know when to speed the ball up again.
+
+7. Starting animation: We made it so that the text displayed at the start of
+the game flashes as done in other games. We did this by alternating between
+increasing and decreasing the alpha value. 
